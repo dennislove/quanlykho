@@ -8,8 +8,8 @@ import { Link, useNavigate, useLocation  } from "react-router-dom";
 import { getAuth,createUserWithEmailAndPassword } from 'firebase/auth';
 import image from '../../images/pattern.png'
 import twitter from '../../images/twitter-logo.svg'
-import { addUserToDatabase } from "../../components/auth/addUserToDb";
-import PasswordInput from "../../components/auth/PasswordInput";
+import { addUserToDatabase } from "../../auth/addUserToDb";
+import PasswordInput from '../../auth/PasswordInput'
 
 export function SignUp() {
   const [email, setEmail] = useState('');
@@ -120,6 +120,11 @@ const handleConfirmPasswordChange = (event) => {
               Đăng Ký Ngay
             </Button>
             {error && <p className="text-red-500">{error}</p>}
+            <div className="flex items-center justify-center mt-10 mx-auto w-1/2 ">
+             <div className="border-t border-gray-300 flex-grow mr-3"></div>
+             <span className="text-gray-500">hoặc</span>
+             <div className="border-t border-gray-300 flex-grow ml-3"></div>
+           </div>
             <div className="space-y-4 mt-8">
               <Button size="lg" color="white" className="flex items-center gap-2 justify-center shadow-md py-4" fullWidth>
                 <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">

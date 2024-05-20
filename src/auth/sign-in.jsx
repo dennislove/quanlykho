@@ -40,6 +40,7 @@ export function SignInClient() {
 
   const handleSignIn = (event) => {
      event.preventDefault(); 
+     
     // console.log("Form Submitted");
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
@@ -62,7 +63,7 @@ export function SignInClient() {
     get(userRef).then((snapshot) => {
       if (snapshot.exists()) {
         const userInfo = snapshot.val();
-        navigate(userInfo.auth === "admin" ? '/admin/api/news' : '/', { replace: true });
+        navigate(userInfo.auth === "admin" ? '/admin' : '/', { replace: true });
       } else {
         navigate('/', { replace: true }); // Default redirect if no specific role is found
       }

@@ -11,7 +11,7 @@ function HeaderComponent({name}) {
             <li className="flex items-center text-blue-gray-900 antialiased font-rob text-sm font-normal leading-normal cursor-pointer transition-colors duration-300 hover:text-light-blue-500">
               <a href="#" className=''>
                 <p className="block antialiased font-rob text-sm leading-normal text-blue-gray-900 font-normal opacity-50 transition-all hover:text-blue-500 hover:opacity-100">
-                  dashboard
+                  Điều khiển
                 </p>
               </a>
               <span className="text-[#607D8B] text-sm antialiased font-rob font-normal leading-normal mx-2 pointer-events-none select-none">

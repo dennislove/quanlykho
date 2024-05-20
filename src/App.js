@@ -7,11 +7,11 @@ import 'firebase/storage';
 import { getDatabase, ref,get, orderByChild, equalTo, set, push, serverTimestamp } from 'firebase/database';
 import { getAuth, GoogleAuthProvider, TwitterAuthProvider } from 'firebase/auth';
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
-import PageTitleManager from './routes/PageTitleManager';
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
+import PageTitleManager from './routes/PageTitleManager.jsx';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -20,6 +20,7 @@ import { getAnalytics } from "firebase/analytics";
 const firebaseConfig = {
   apiKey: "AIzaSyAFz-_2pLc7DwYrivmRPo3NSdAH6LhbCGg",
   authDomain: "quanlykho-bigc.firebaseapp.com",
+  databaseURL: "https://quanlykho-bigc-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "quanlykho-bigc",
   storageBucket: "quanlykho-bigc.appspot.com",
   messagingSenderId: "628510293537",
@@ -40,7 +41,6 @@ const twitterProvider = new TwitterAuthProvider();
 function App() {
   return (
     <Router>
-     
     <Routes>
       {routes.map((routes) => {
         const Page = routes.element

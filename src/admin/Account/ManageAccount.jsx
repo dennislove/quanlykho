@@ -68,7 +68,7 @@ function ManageAccount() {
       <div className="mt-12 mb-8 flex flex-col gap-4">
         <div className="relative bg-clip-border mx-4 rounded-xl overflow-hidden bg-gradient-to-tr from-gray-900 to-gray-800 text-white shadow-gray-900/20 shadow-lg -mt-6 mb-2 p-6">
           <h6 className="block antialiased tracking-normal font-sans text-base font-semibold leading-relaxed text-white">
-            Management Account
+            Quản lý tài khoản
           </h6>
         </div>
        <div>
@@ -77,7 +77,7 @@ function ManageAccount() {
             duration-1000 ease-in-out inline-block overflow-hidden capitalize shadow-md hover:bg-transparent hover:text-indigo-500
             before:absolute before:-left-[100%] hover:before:left-full before:top-0 before:w-full before:h-full
         before:bg-gradient-to-r before:from-transparent before:via-white before:to-transparent before:transition-all before:duration-500 before:ease-linear">
-        Add Admin Account
+        Thêm tài khoản
         </Link>
        </div>
          {/* ----------table------------ */}
@@ -96,10 +96,10 @@ function ManageAccount() {
                     Authentication
                   </th>
                   <th scope="col" className="py-3 px-6">
-                    Created At
+                    Ngày tạo
                   </th>
                   <th scope="col" className="py-3 px-6">
-                    Function
+                    Chức năng
                   </th>
                 </tr>
               </thead>
