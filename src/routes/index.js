@@ -2,10 +2,13 @@ import HomePage from "../pages/HomePage/HomePage"
 import SignInClient from '../auth/sign-in'
 import Product from "../pages/Product/Product"
 import Profile from "../pages/Profile/Profile"
-import ImportProduct from "../pages/Product/ImportProduct"
-import SignUpClient from "../auth/sign-up"
+import ImportProduct from "../pages/ImportProduct/ImportProduct"
 import ManagementAccount from "../pages/Account/ManagementAccount"
 import SignUp from "../admin/Account/SignUp"
+import FormExport from "../pages/ExportProduct/FormExport"
+import CmdExport from "../pages/ExportProduct/CmdExport"
+import CmdImport from "../pages/ImportProduct/CmdImport"
+import Category from "../pages/Category/Category"
 export const routes = [
    
     {
@@ -26,6 +29,26 @@ export const routes = [
     {
         path:'/nhap-hang',
         element:ImportProduct,
+        isShowHeader: true,
+    },
+    {
+        path:'/phieu-nhap-hang',
+        element:CmdImport,
+        isShowHeader: true,
+    },
+    {
+        path:'/phieu-xuat-hang',
+        element:FormExport,
+        isShowHeader: true,
+    },
+    {
+        path:'/xuat-hang',
+        element:CmdExport,
+        isShowHeader: true,
+    },
+    {
+        path:'/categories',
+        element:Category,
         isShowHeader: true,
     },
     {

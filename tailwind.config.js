@@ -1,9 +1,12 @@
 /** @type {import('tailwindcss').Config} */
+const plugin = require('tailwindcss/plugin');
+
 export default {
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
+  
   theme: {
     screens: {
       'pm': '368px',
@@ -17,6 +20,13 @@ export default {
       // => @media (min-width: 1440px) { ... }
     },
     extend: {
+      scrollbarHide: {
+        scrollbarWidth: 'none', // Cho Firefox
+        msOverflowStyle: 'none', // Cho IE và Edge
+        '&::-webkit-scrollbar': {
+          display: 'none', // Cho WebKit (Chrome, Safari, v.v.)
+        },
+      },
       fontFamily:{
         oxa: 'SVN-Hemi Head',
         pop: 'Poppins',
@@ -40,5 +50,18 @@ export default {
      }
     },
   },
-  plugins: [],
+  plugins: [
+    plugin(function({ addUtilities }) {
+      const newUtilities = {
+        '.hide-scrollbar': {
+          scrollbarWidth: 'none', // Cho Firefox
+          msOverflowStyle: 'none', // Cho IE và Edge
+          '&::-webkit-scrollbar': {
+            display: 'none', // Cho WebKit (Chrome, Safari, v.v.)
+          },
+        }
+      }
+      addUtilities(newUtilities, ['responsive']);
+    })
+  ],
 }

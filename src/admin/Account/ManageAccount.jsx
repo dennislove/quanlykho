@@ -1,21 +1,23 @@
 import React, { useEffect, useState } from 'react'
-import { getDatabase, ref, child, get, set, remove } from "firebase/database";
+import { getDatabase, ref, child, get, update, remove } from "firebase/database";
 import { Link } from 'react-router-dom'
 
 function ManageAccount() {
-    const [showForm, setShowForm] = useState(false); // useState hook để lưu trữ trạng thái hiển thị (mặc định là false)
     const [currentItem, setCurrentItem] = useState(null);
-
-    const [query, setQuery] =useState("") //luu gia tri khi search
+    const [users, setUsers] = useState([]);
+      const [role, setRole] = useState('');
+      const [email, setEmail] = useState('');
+      const [selectedUserId, setSelectedUserId] = useState(null);
+      const [query, setQuery] =useState("") //luu gia tri khi search
     
-  
+ 
     // select database
     const [media, setMedia] = useState([]);
     const [filteredMedia, setFilteredMedia] = useState([]);
 
     useEffect(() => {
       const dbRef = ref(getDatabase());
-  
+      
       get(child(dbRef, `Users`))
         .then((snapshot) => {
           if (snapshot.exists()) {
@@ -42,14 +44,7 @@ function ManageAccount() {
     );
     setFilteredMedia(results);
   }, [query, media]); 
-  
-    const handleEditMedia = (mediaId) => {
-      const item = media.find(item => item.id === mediaId);
-      if (item) {
-        setCurrentItem(item); // Set the current item to the one to be edited
-        setShowForm(true); // Show the form
-      }
-    };
+
     const handleDeleteMedia = (mediaId) => {
       const db = getDatabase();
       const mediaRef = ref(db, `Users/${mediaId}`);
@@ -64,6 +59,25 @@ function ManageAccount() {
           console.error("Error deleting media item:", error);
         });
     };
+    const handleEditMedia = (item) => {
+      setEmail(item.email);
+      setRole(item.auth); // Assuming 'auth' field is being used as role
+      setSelectedUserId(item.id);
+    };
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      const db = getDatabase();
+      const mediaRef = ref(db, `Users/${selectedUserId}`);
+      update(mediaRef, {
+        auth: role, // Update only the role
+      }).then(() => {
+        alert("Cập nhật quyền thành công");
+        // Optionally reset the form or provide some feedback here
+      }).catch((error) => {
+        alert("lỗi cập nhật quyền:", error);
+      });
+    };
+
      return (
       <div className="mt-12 mb-8 flex flex-col gap-4">
         <div className="relative bg-clip-border mx-4 rounded-xl overflow-hidden bg-gradient-to-tr from-gray-900 to-gray-800 text-white shadow-gray-900/20 shadow-lg -mt-6 mb-2 p-6">
@@ -71,6 +85,34 @@ function ManageAccount() {
             Quản lý tài khoản
           </h6>
         </div>
+        <form className=" space-y-6 border-2 p-6 bg-white rounded-lg" onSubmit={handleSubmit} >
+        <div className="rounded-md shadow-sm ">
+           <div className=' flex gap-6'>
+                <input
+                type="text"
+                className="form-control grow outline-none border rounded-lg p-2 text-gray-500 bg-gray-100"
+                value={email}
+                readOnly
+                />
+            
+          <select
+              id="role" name="role" required
+              onChange={(e) => setRole(e.target.value)}
+              value={role}
+              className='grow border focus:border-black rounded-lg p-2'>
+              <option value="">---Loại tài khoản---</option>
+              <option value="admin">Admin</option>
+              <option value="importStaff">Nhân viên nhập</option>
+              <option value="exportStaff">Nhân viên xuất</option>
+            </select>
+               
+          </div>
+          
+        </div>
+    
+      <button type="submit" className='py-3 w-full  bg-[#6366f1] text-white font-rob mt-4 rounded-lg' >Cập nhật</button>
+
+      </form>
        <div>
        <Link to="/admin/api/sign-up" 
             className=" cursor-pointer relative lg:px-8 md:px-6 lg:py-3 md:py-2 pm:px-6 pm:py-2 border-2 border-indigo-500 font-semibold text-white rounded-lg transition-all bg-indigo-500
@@ -93,7 +135,7 @@ function ManageAccount() {
                     Email
                   </th>
                   <th scope="col" className="py-3 px-6">
-                    Authentication
+                    Quyền hạn
                   </th>
                   <th scope="col" className="py-3 px-6">
                     Ngày tạo
@@ -120,8 +162,8 @@ function ManageAccount() {
                     {item.createdAt}
                   </td>
                   <td className="py-4 px-6 flex">
-                    <h2 onClick={() => handleEditMedia(item.id)} className="font-medium cursor-pointer text-blue-600 dark:text-blue-500 hover:underline">Edit</h2>
-                    <h2 onClick={() => handleDeleteMedia(item.id)} className="font-medium cursor-pointer text-red-600 dark:text-red-500 hover:underline ml-4">Delete</h2>
+                    <h2 onClick={() => handleEditMedia(item)} className="font-medium cursor-pointer text-blue-600 dark:text-blue-500 hover:underline">Sửa</h2>
+                    <h2 onClick={() => handleDeleteMedia(item.id)} className="font-medium cursor-pointer text-red-600 dark:text-red-500 hover:underline ml-4">Xóa</h2>
                   </td>
                 </tr>
                    ))}

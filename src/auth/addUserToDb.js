@@ -12,7 +12,7 @@ export  function addUserToDatabase(uid, email, role) {
       auth: role,
       createdAt: serverTimestamp()
   }).then(() => {
-      console.log("User added to database with role:", role);
+      console.log("User added to database with role:");
   }).catch((error) => {
       console.error("Error adding user to database:", error);
   });
