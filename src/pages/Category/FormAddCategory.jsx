@@ -38,25 +38,31 @@ const handleCategoryChange = (event) => {
     return(
       <form className=" space-y-6 border-2 p-6 bg-white rounded-lg" onSubmit={handleSubmit} >
       <div className="rounded-md shadow-sm ">
-        <h1>Thêm Danh Mục</h1>
+      <h1 className=' font-bold text-center mb-10'>Thêm Danh Mục</h1>
         <div className=" flex flex-col gap-3 my-3">
          <div className=' flex gap-6'>
-             <input
-              type="text"
-              id="title"
-              className="form-control grow outline-none focus:border-black border rounded-lg p-2"
-              placeholder="Tên danh mục"
-              value={nameID}
-              onChange={handleNameIDChange}
-              />
+         <div className=' flex flex-col grow'>
+            <label htmlFor="">Tên danh mục</label>
+               <input
+                type="text"
+                id="title"
+                className="form-control  outline-none focus:border-black border rounded-lg p-2"
+                placeholder="Tên danh mục"
+                value={nameID}
+                onChange={handleNameIDChange}
+                />
+         </div>
+         <div className=' flex flex-col grow'>
+            <label htmlFor="">Mã danh mục</label>
                 <input
               type="text"
               id="title"
-              className="form-control grow outline-none focus:border-black border rounded-lg p-2"
+              className="form-control  outline-none focus:border-black border rounded-lg p-2"
               placeholder="Mã danh mục"
               value={category}
               onChange={handleCategoryChange}
               />
+              </div>
          </div>
              
         </div>

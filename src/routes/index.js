@@ -9,6 +9,8 @@ import FormExport from "../pages/ExportProduct/FormExport"
 import CmdExport from "../pages/ExportProduct/CmdExport"
 import CmdImport from "../pages/ImportProduct/CmdImport"
 import Category from "../pages/Category/Category"
+import EditProduct from "../pages/Product/EditProduct"
+import Supplier from "../pages/Supplier/Supplier"
 export const routes = [
    
     {
@@ -32,7 +34,7 @@ export const routes = [
         isShowHeader: true,
     },
     {
-        path:'/phieu-nhap-hang',
+        path:'/lenh-nhap-hang',
         element:CmdImport,
         isShowHeader: true,
     },
@@ -49,6 +51,16 @@ export const routes = [
     {
         path:'/categories',
         element:Category,
+        isShowHeader: true,
+    },
+    {
+        path:'/suppliers',
+        element:Supplier,
+        isShowHeader: true,
+    },
+    {
+        path:'/product/edit/:id',
+        element:EditProduct,
         isShowHeader: true,
     },
     {

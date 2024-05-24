@@ -11,12 +11,69 @@ function FormAddNews() {
     const [selectedCategory, setSelectedCategory] = useState('');
     const [unit, setUnit] = useState('');
     const [quantity, setQuantity] = useState('');
+    const [quantityImpt, setQuantityImpt] = useState('');
     const [price, setPrice] = useState('');
     const [descriptions, setDescriptions] = useState([{ desc: '' }]);
     const [image, setImage] = useState("");
+    const [code, setCode] = useState("");
+    const [delivery, setDelivery] = useState("")
+    const [exportCode, setExportCode] = useState("")
+    const [reasonMistake, setReasonMistake] = useState("Không có")
     const [temporaryData, setTemporaryData] = useState([]);
+    const [currentDate, setCurrentDate] = useState(new Date().toLocaleDateString());
+    
+    function formatCurrencyVND(number) {
+      return number.toLocaleString('vi-VN');
+  }
+  
+  // Function to convert numbers to Vietnamese words
+  function numberToVietnameseWords(number) {
+      const under20 = ["không", "một", "hai", "ba", "bốn", "năm", "sáu", "bảy", "tám", "chín", "mười", "mười một", "mười hai", "mười ba", "mười bốn", "mười lăm", "mười sáu", "mười bảy", "mười tám", "mười chín"];
+      const tens = ["", "", "hai mươi", "ba mươi", "bốn mươi", "năm mươi", "sáu mươi", "bảy mươi", "tám mươi", "chín mươi"];
+      const chunks = ["", "ngàn", "triệu", "tỷ"];
+  
+      if (number === 0) return 'không đồng';
+  
+      if (number < 0) return 'âm ' + numberToVietnameseWords(-number);
+  
+      const words = [];
+  
+      // Process in chunks of thousands
+      for (let i = 0; number > 0; i++) {
+          const chunk = number % 1000;
+  
+          if (chunk) {
+              let chunkStr = '';
+  
+              if (chunk < 100) {
+                  if (chunk < 20) chunkStr = under20[chunk];
+                  else chunkStr = tens[Math.floor(chunk / 10)] + (chunk % 10 ? " " + under20[chunk % 10] : "");
+              } else {
+                  const hundreds = Math.floor(chunk / 100);
+                  const remainder = chunk - hundreds * 100;
+                  chunkStr = under20[hundreds] + " trăm" + (remainder < 20 ? (remainder ? " lẻ " + under20[remainder] : "") : " " + tens[Math.floor(remainder / 10)] + (remainder % 10 ? " " + under20[remainder % 10] : ""));
+              }
+  
+              words.unshift(chunkStr + " " + chunks[i]);
+          }
+  
+          number = Math.floor(number / 1000);
+      }
+  
+      return words.join(" ") + " đồng";
+  }
+  const totalMoney = temporaryData.reduce((total, item) => total + (item.price * item.quantity), 0);
 
-    const handleUploadFile = (event) => {
+// Format and convert to words
+const formattedTotalMoney = formatCurrencyVND(totalMoney);
+const totalMoneyInWords = numberToVietnameseWords(totalMoney);
+    // Cập nhật ngày hiện tại khi component được mount
+    useEffect(() => {
+      const today = new Date().toLocaleDateString();
+      setCurrentDate(today);
+    }, []);
+
+const handleUploadFile = (event) => {
         // Kiểm tra nếu có file được chọn
         if (event.target.files.length > 0) {
           setImage(event.target.files[0]);
@@ -26,16 +83,6 @@ function FormAddNews() {
           console.log("No file uploaded.");
         }
       };
-
-    const handleTitleChange = (event) => {
-        const newTitle = event.target.value;
-        setTitle(newTitle);
-  };
-
-  const handleNameIDChange = (event) => {
-    const newNameID = event.target.value;
-    setNameID(newNameID);
-};
 
 useEffect(() => {
   const dbRef = ref(getDatabase());
@@ -56,21 +103,46 @@ useEffect(() => {
           console.error(error);
       });
 }, []);
-
+const handleTitleChange = (event) => {
+  const newTitle = event.target.value;
+  setTitle(newTitle);
+};
+const handleNameIDChange = (event) => {
+const newNameID = event.target.value;
+setNameID(newNameID);
+};
 const handleUnitChange = (event) => {
   const newUnit = event.target.value;
   setUnit(newUnit);
 };
-
 const handleQuantityChange = (event) => {
   const newQuantity = event.target.value;
   setQuantity(newQuantity);
+};
+const handleQuantityImptChange = (event) => {
+  const newQuantityImpt = event.target.value;
+  setQuantityImpt(newQuantityImpt);
 };
 const handlePriceChange = (event) => {
   const newPrice = event.target.value;
   setPrice(newPrice);
 };
-
+const handleCodeChange = (event) => {
+  const newCode = event.target.value;
+  setCode(newCode);
+};
+const handleDeliveryChange = (event) => {
+  const newDelivery = event.target.value;
+  setDelivery(newDelivery);
+};
+const handleExpCodeChange = (event) => {
+  const newExpCode = event.target.value;
+  setExportCode(newExpCode);
+};
+const handleReasonChange = (event) => {
+  const newReason = event.target.value;
+  setReasonMistake(newReason);
+};
   const handleDescriptionChange = (index) => (event) => {
     const newDescriptions = descriptions.map((item, idx) => {
         if (idx === index) {
@@ -80,53 +152,17 @@ const handlePriceChange = (event) => {
     });
     setDescriptions(newDescriptions);
 };
-
 const handleAddDescription = () => {
   setDescriptions([...descriptions, { desc: '' }]);
 };
-
 const handleDeleteDescription = () => {
   if (descriptions.length > 1) {
       setDescriptions(descriptions.slice(0, -1));
   } 
 };
   
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   if (!title || !nameID || !unit || !quantity || !selectedCategory || !descriptions.length === 0) 
-  //   return(
-  //     alert("Please enter complete information")
-  //   );
-  //   const database = getDatabase();
-  //   const imageRef = storageRef(storage, `images/${image.name}`);
-  //   const snapshot = await uploadBytes(imageRef, image);
-  //   const imageUrl = await getDownloadURL(snapshot.ref);
-
-  //   const newsRef = push(ref(database, 'Products'));
-  //   set(newsRef, {
-  //     name: title,
-  //     productCode: nameID,
-  //     unit:unit,
-  //     categoryCode: selectedCategory,
-  //     quantity: quantity,
-  //     price: price,
-  //     descriptions: descriptions.reduce((acc, item, index) => {
-  //       acc[`description${index + 1}`] = item.desc;
-  //       return acc;
-  //   }, {}),
-  //     image: imageUrl,
-  //     createdAt: serverTimestamp()
-  //   //   image: image
-  //   }).then(() => {
-  //       // set(counterRef, nextId);
-  //     alert('Data uploaded successfully!');
-  //   }).catch((error) => {
-  //     alert('Failed to upload data:', error);
-  //   });
-  // };
- 
-  const handleSaveTemporary = async () => {
-    if (!title || !nameID || !unit || !quantity || !selectedCategory || descriptions.length === 0) {
+const handleSaveTemporary = async () => {
+    if (!title || !nameID || !unit || !quantity || !selectedCategory || !reasonMistake || descriptions.length === 0) {
       alert("Please enter complete information");
       return;
     }
@@ -146,12 +182,26 @@ const handleDeleteDescription = () => {
       price,
       selectedCategory,
       descriptions,
-      imageUrl
+      imageUrl,
+      reasonMistake,
+      delivery,
+      code,
+      exportCode
     }]);
+
+   
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!nameID || !title || !unit || !quantity || !price || !image || !code || !delivery || !exportCode) 
+      return(
+        alert("Please enter complete information")
+      );
+    const imageRef = storageRef(storage, `images/${image.name}`);
+    const snapshot = await uploadBytes(imageRef, image);
+    const imageUrl = await getDownloadURL(snapshot.ref);
+
     for (let data of temporaryData) {
       const newsRef = push(ref(getDatabase(), 'Products'));
       set(newsRef, {
@@ -161,11 +211,15 @@ const handleDeleteDescription = () => {
         categoryCode: data.selectedCategory,
         quantity: data.quantity,
         price: data.price,
+        reasonMistake:data.reasonMistake,
+        delivery:data.delivery,
+        code: data.code,
+        exportCode: data.exportCode,
         descriptions: data.descriptions.reduce((acc, item, index) => {
           acc[`description${index + 1}`] = item.desc;
           return acc;
         }, {}),
-        image: data.imageUrl,
+        image: imageUrl,
         createdAt: serverTimestamp()
       }).then(() => {
         alert('Data uploaded successfully!');
@@ -199,26 +253,74 @@ const handleDeleteDescription = () => {
      <div>
         <form className=" space-y-6 border-2 p-6 bg-white rounded-lg" onSubmit={handleSubmit} >
         <div className="rounded-md shadow-sm ">
+        <h1 className=' font-bold text-center mb-10 text-xl uppercase'>Phiếu nhập kho</h1>
+      
+         
+            <h1 className='text-center mb-10 text-gray-500'>Số: 
+            <input
+                  type="text"
+                  id="title"
+                  className="form-control border-b focus:border-b-black outline-none "
+                  value={code}
+                  onChange={handleCodeChange}
+                  />
+            </h1>
+           
+          <h1 className=' mb-10 flex text-gray-500 gap-2'>Người vận chuyển: 
+          <input
+                type="text"
+                id="title"
+                className="form-control border-b focus:border-b-black text-black outline-none w-3/4"
+                value={delivery}
+                onChange={handleDeliveryChange}
+                />
+          </h1>
+          <div className=' flex justify-start items-start text-center gap-2 border-b-black border-b-2'>
+            <h1 className=' mb-10 flex text-gray-500'>Theo hóa đơn số: </h1>
+            <input
+                  type="text"
+                  id="title"
+                  className="form-control border-b focus:border-b-black outline-none"
+                  value={exportCode}
+                  onChange={handleExpCodeChange}
+                  />
+                 ngày {currentDate} của 
+                   <input
+                  type="text"
+                  id="title"
+                  className="form-control border-b focus:border-b-black outline-none w-1/2"
+                  value={ delivery}
+                  readOnly
+                  onChange={handleDeliveryChange}
+                  />
+          </div>
+          
           <div className=" flex flex-col gap-3 my-3">
            <div className=' flex gap-6'>
+           <div className=' flex flex-col grow'>
+            <label htmlFor="">Tên sản phẩm</label>
                 <input
                 type="text"
                 id="title"
-                className="form-control grow outline-none focus:border-black border rounded-lg p-2"
+                className="form-control  outline-none focus:border-black border rounded-lg p-2"
                 placeholder="Tên sản phẩm"
                 value={title}
                 onChange={handleTitleChange}
                 />
-                
+                </div>
+                <div className=' flex flex-col grow'>
+            <label htmlFor="">Mã sản phẩm</label>
                <input
                 type="text"
                 id="title"
-                className="form-control grow outline-none focus:border-black border rounded-lg p-2"
+                className="form-control  outline-none focus:border-black border rounded-lg p-2"
                 placeholder="Mã sản phẩm"
                 value={nameID}
                 onChange={handleNameIDChange}
                 />
-                
+                </div>
+                <div className=' flex flex-col grow'>
+            <label htmlFor="">Mã danh mục</label>
                  <select name="category" id="category-select" className='grow border focus:border-black rounded-lg p-2 '
                  value={selectedCategory} onChange={e => setSelectedCategory(e.target.value)} >
                   <option value="">Mã danh mục</option>
@@ -228,24 +330,45 @@ const handleDeleteDescription = () => {
                   </option>
               ))}
           </select>
+          </div>
            </div>
              <div className='flex gap-10'>
+             <div className=' flex flex-col grow'>
+            <label htmlFor="">Đơn vị tính</label>
                   <input
                 type="text"
                 id="title"
                 className="form-control outline-none focus:border-black border rounded-lg p-2"
-                placeholder="Đơn vị"
+                placeholder="Đơn vị tính"
                 value={unit}
                 onChange={handleUnitChange}
                 />
+                </div>
+                <div className=' flex flex-col grow'>
+            <label htmlFor="">Số lượng chứng từ</label>
                   <input
                 type="number"
                 id="title"
                 className="form-control outline-none focus:border-black border rounded-lg p-2"
-                placeholder="Số lượng"
+                placeholder="Số lượng chứng từ"
+                value={quantityImpt}
+                onChange={handleQuantityImptChange}
+                />
+                </div>
+                <div className=' flex flex-col grow'>
+            <label htmlFor="">Số lượng nhập</label>
+                  <input
+                type="number"
+                id="title"
+                className="form-control outline-none focus:border-black border rounded-lg p-2"
+                placeholder="Số lượng nhập"
                 value={quantity}
                 onChange={handleQuantityChange}
                 />
+                </div>
+                
+                <div className=' flex flex-col grow'>
+            <label htmlFor="">Giá nhập</label>
                   <input
                 type="number"
                 id="title"
@@ -254,23 +377,41 @@ const handleDeleteDescription = () => {
                 value={price}
                 onChange={handlePriceChange}
                 />
+                </div>
              </div>
-          {descriptions.map((item, index) => (
+            <div className=' flex gap-4'>
+               <div className=' flex flex-col grow'>
+              <label htmlFor="">Mô tả</label>
+                {descriptions.map((item, index) => (
+                        <textarea
+                            key={index}
+                            className="form-control outline-none focus:border-black border rounded-lg p-2 h-[100px]"
+                            placeholder={`Mô tả ${index + 1}`}
+                            value={item.desc}
+                            onChange={handleDescriptionChange(index)}
+                        />
+                    ))}
+                    
+                    <div className='flex gap-3 mt-4'>
+                      <button type='button' className=' bg-[#6366f1] text-white px-3 py-2 rounded-lg ' onClick={handleAddDescription}>Thêm mô tả</button>
+                      {descriptions.length > 1 && (
+                        <button type="button" className='border border-[#6366f1] text-[#6366f1] px-3 py-2 rounded-lg' onClick={handleDeleteDescription}>Xóa bớt</button>
+                      )}
+                     
+                    </div>
+                 </div>
+                 <div className=' flex flex-col grow'>
+                        <label htmlFor="">Lý do hỏng</label>
                       <textarea
-                          key={index}
-                          className="form-control outline-none focus:border-black border rounded-lg p-2 h-[100px]"
-                          placeholder={`Mô tả ${index + 1}`}
-                          value={item.desc}
-                          onChange={handleDescriptionChange(index)}
-                      />
-                  ))}
-                  <div className='flex gap-3'>
-                    <button type='button' className=' bg-[#6366f1] text-white px-3 py-2 rounded-lg ' onClick={handleAddDescription}>Thêm mô tả</button>
-                    {descriptions.length > 1 && (
-                      <button type="button" className='border border-[#6366f1] text-[#6366f1] px-3 py-2 rounded-lg' onClick={handleDeleteDescription}>Xóa bớt</button>
-                    )}
-                  </div>
-               
+                    type="text"
+                    id="title"
+                    className="form-control outline-none focus:border-black border rounded-lg p-2 h-[100px]"
+                    placeholder="Lý do hỏng"
+                    value={reasonMistake}
+                    onChange={handleReasonChange}
+                    />
+                    </div>
+            </div>
           </div>
           
           <div className="custom-file">
@@ -278,7 +419,7 @@ const handleDeleteDescription = () => {
           
         </div>
         </div>
-      <button type="button" className='bg-[#6366f1] text-white px-3 py-2 rounded-lg ' onClick={handleSaveTemporary}>Thêm mới</button>
+      <button type="button" className='border-2 bg-green-600 hover:bg-transparent hover:text-green-600 border-green-600  text-white px-3 py-2 rounded-lg ' onClick={handleSaveTemporary}>Thêm vào bảng</button>
 
         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -341,6 +482,8 @@ const handleDeleteDescription = () => {
           ))}
         </tbody>
       </table>
+      <h1>Tổng tiền: {formattedTotalMoney}VND</h1>
+      <h1>Bằng chữ: {totalMoneyInWords}</h1>
       <button type="submit" className='py-3 w-full  bg-[#6366f1] text-white font-rob mt-4 rounded-lg' >Nhập kho</button>
 
       </form>

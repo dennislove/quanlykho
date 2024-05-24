@@ -2,11 +2,15 @@ import React, { useEffect, useState } from 'react'
 
 import { getDatabase, ref, child, get, remove  } from "firebase/database";
 import ReactPaginate from 'react-paginate';
-import { useNavigate } from 'react-router-dom';
+import FormAddSupplier from './FormAddSupplier';
 
-function ProductsManagement() {
+function SupplierManagement() {
+  const [showForm, setShowForm] = useState(false); // useState hook để lưu trữ trạng thái hiển thị (mặc định là false)
 
-  const navigate = useNavigate();
+  const handleClick = () => {
+    setShowForm(!showForm); // Thay đổi trạng thái hiển thị khi click
+  };
+
   // select database
   const [news, setNews] = useState([]);
   const [filteredNews, setFilteredNews] = useState([]);
@@ -23,7 +27,7 @@ function ProductsManagement() {
   useEffect(() => {
     const dbRef = ref(getDatabase());
 
-    get(child(dbRef, `Products`))
+    get(child(dbRef, `Suppliers`))
       .then((snapshot) => {
         if (snapshot.exists()) {
           const fetchedNews = Object.entries(snapshot.val()).map(([id, value]) => ({
@@ -48,9 +52,7 @@ function ProductsManagement() {
 
   useEffect(() => {
     const results = news.filter(item =>
-      item.name.toLowerCase().includes(query) ||  
-      item.categoryCode.toLowerCase().includes(query) ||  
-      item.productCode.toLowerCase().includes(query)
+      item.nameID.toLowerCase().includes(query)
     );
     setFilteredNews(results);
     if (currentPage > Math.ceil(results.length / itemsPerPage)) {
@@ -63,11 +65,15 @@ function ProductsManagement() {
     setCurrentPage(event.selected + 1);
   };
   const handleEditNews = (newsId) => {
-    navigate(`/product/edit/${newsId}`);
-  }; 
+    const item = news.find(item => item.id === newsId);
+    if (item) {
+      // Set the current item to the one to be edited
+      setShowForm(true); // Show the form
+    }
+  };
   const handleDeleteNews = (newsId) => {
     const db = getDatabase();
-    const newsRef = ref(db, `Products/${newsId}`);
+    const newsRef = ref(db, `Suppliers/${newsId}`);
   
     remove(newsRef)
       .then(() => {
@@ -84,13 +90,18 @@ function ProductsManagement() {
     <div className="mt-12 mb-8 flex flex-col gap-4">
       <div className="relative bg-clip-border mx-4 rounded-xl overflow-hidden bg-gradient-to-tr from-gray-900 to-gray-800 text-white shadow-gray-900/20 shadow-lg -mt-6 mb-2 p-6">
         <h6 className="block antialiased tracking-normal font-sans text-base font-semibold leading-relaxed text-white">
-          Sản phẩm trong kho
+          Danh mục nhà cung cấp
         </h6>
       </div>
       <div className="flex gap-4 items-center justify-center">
+        <button className="rounded-full bg-indigo-500 text-white flex p-2" onClick={handleClick}>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+        </svg>
+
+        </button>
         
         <div className="">
-          <label htmlFor="search-news" className="sr-only ">Tìm kiếm</label>
           <div className='border flex shadow-sm focus:ring-indigo-500 focus:border-indigo-500 w-full sm:text-sm border-gray-300 rounded'>
               <input
                 type="text"
@@ -109,6 +120,7 @@ function ProductsManagement() {
           
         </div>
        </div>
+       {!showForm && <FormAddSupplier />}
 
        {/* ----------table------------ */}
        
@@ -120,22 +132,16 @@ function ProductsManagement() {
                   #
                 </th>
                 <th scope="col" className="py-3 px-6">
-                  Mã sản phẩm
+                  Mã NCC
                 </th>
                 <th scope="col" className="py-3 px-6">
-                  Tên sản phẩm
+                  Tên NCC
                 </th>
                 <th scope="col" className="py-3 px-6">
-                  Mã danh mục
+                  Hotline
                 </th>
                 <th scope="col" className="py-3 px-6">
-                  Đơn vị
-                </th>
-                <th scope="col" className="py-3 px-6">
-                  Số lượng
-                </th>
-                <th scope="col" className="py-3 px-6">
-                  Đơn giá
+                  Mã số thuế
                 </th>
                 <th scope="col" className="py-3 px-6">
                   Chức năng
@@ -150,22 +156,16 @@ function ProductsManagement() {
                  {firstItemRank + index}
                 </td>
                 <td className="py-4 px-6">
-                  {item.name}
+                  {item.category}
                 </td>
                 <td className="py-4 px-6">
-                {item.productCode}
+                {item.nameID}
                 </td>
                 <td className="py-4 px-6">
-                  {item.categoryCode}
+                  {item.hotline}
                 </td>
                 <td className="py-4 px-6">
-                  {item.unit}
-                </td>
-                <td className="py-4 px-6">
-                  {item.quantity}
-                </td>
-                <td className="py-4 px-6">
-                  {item.price}
+                  {item.taxCode}
                 </td>
                 <td className="py-4 px-6 flex">
                   <h2 onClick={() => handleEditNews(item.id)} className="font-medium cursor-pointer text-blue-600 dark:text-blue-500 hover:underline">Sửa</h2>
@@ -210,4 +210,4 @@ function ProductsManagement() {
   )
 }
 
-export default ProductsManagement
+export default SupplierManagement

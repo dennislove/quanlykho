@@ -140,15 +140,15 @@ function Dashboard() {
                       "align-middle select-none font-rob font-normal text-center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-sm py-3 rounded-lg bg-gradient-to-tr from-gray-900 to-gray-800 text-white shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 active:opacity-[0.85] w-full flex items-center gap-4 px-4 capitalize"
                       :"align-middle select-none font-rob font-normal text-center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-sm py-3 rounded-lg text-[#607D8B] hover:bg-[#607D8B]/10 active:bg-[#607D8B]/30 w-full flex items-center gap-4 px-4 capitalize" }
                           type="button"
-                        >Lệnh nhập kho</NavLink>
+                        >Phiếu nhập kho</NavLink>
 
-                      <NavLink to="/phieu-nhap-hang"
+                      <NavLink to="/lenh-nhap-hang"
                       className={({ isActive }) =>
                         isActive? 
                       "align-middle select-none font-rob font-normal text-center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-sm py-3 rounded-lg bg-gradient-to-tr from-gray-900 to-gray-800 text-white shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 active:opacity-[0.85] w-full flex items-center gap-4 px-4 capitalize"
                       :"align-middle select-none font-rob font-normal text-center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-sm py-3 rounded-lg text-[#607D8B] hover:bg-[#607D8B]/10 active:bg-[#607D8B]/30 w-full flex items-center gap-4 px-4 capitalize" }
                           type="button"
-                        >Phiếu nhập kho</NavLink>
+                        >Lệnh nhập kho</NavLink>
                   </div>
               )}
           </div>
@@ -218,6 +218,26 @@ function Dashboard() {
 
                   <p className="block antialiased font-rob text-base leading-relaxed text-inherit font-medium capitalize">
                   Danh mục sản phẩm
+                  </p>
+                </NavLink>
+             
+            </li>
+            <li>
+            <NavLink
+                to="/suppliers"
+                className={({ isActive }) =>
+                  isActive? 
+                "align-middle select-none font-rob font-bold text-center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 rounded-lg bg-gradient-to-tr from-gray-900 to-gray-800 text-white shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 active:opacity-[0.85] w-full flex items-center gap-4 px-4 capitalize"
+                :"align-middle select-none font-rob font-bold text-center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 rounded-lg text-[#607D8B] hover:bg-[#607D8B]/10 active:bg-[#607D8B]/30 w-full flex items-center gap-4 px-4 capitalize" }
+                    type="button"
+                  >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+  <path strokeLinecap="round" strokeLinejoin="round" d="M9 3.75H6.912a2.25 2.25 0 0 0-2.15 1.588L2.35 13.177a2.25 2.25 0 0 0-.1.661V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18v-4.162c0-.224-.034-.447-.1-.661L19.24 5.338a2.25 2.25 0 0 0-2.15-1.588H15M2.25 13.5h3.86a2.25 2.25 0 0 1 2.012 1.244l.256.512a2.25 2.25 0 0 0 2.013 1.244h3.218a2.25 2.25 0 0 0 2.013-1.244l.256-.512a2.25 2.25 0 0 1 2.013-1.244h3.859M12 3v8.25m0 0-3-3m3 3 3-3" />
+</svg>
+
+
+                  <p className="block antialiased font-rob text-base leading-relaxed text-inherit font-medium capitalize">
+                  Danh mục nhà cung cấp
                   </p>
                 </NavLink>
              
