@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 
-import { getDatabase, ref, child, get, remove  } from "firebase/database";
-import FormAddCategory from './FormAddCategory';
+import { getDatabase, ref, child, get, remove  } from "firebase/database";  
 import ReactPaginate from 'react-paginate';
+import FormAddLocation from './FormAddLocation';
 
-function CategoryManagement() {
+function LocationStore() {
   const [showForm, setShowForm] = useState(false); // useState hook để lưu trữ trạng thái hiển thị (mặc định là false)
 
   const handleClick = () => {
@@ -27,7 +27,7 @@ function CategoryManagement() {
   useEffect(() => {
     const dbRef = ref(getDatabase());
 
-    get(child(dbRef, `Category`))
+    get(child(dbRef, `Locations`))
       .then((snapshot) => {
         if (snapshot.exists()) {
           const fetchedNews = Object.entries(snapshot.val()).map(([id, value]) => ({
@@ -52,7 +52,7 @@ function CategoryManagement() {
 
   useEffect(() => {
     const results = news.filter(item =>
-      item.nameID.toLowerCase().includes(query)
+      item.areaName.toLowerCase().includes(query)
     );
     setFilteredNews(results);
     if (currentPage > Math.ceil(results.length / itemsPerPage)) {
@@ -73,7 +73,7 @@ function CategoryManagement() {
   };
   const handleDeleteNews = (newsId) => {
     const db = getDatabase();
-    const newsRef = ref(db, `Category/${newsId}`);
+    const newsRef = ref(db, `Locations/${newsId}`);
   
     remove(newsRef)
       .then(() => {
@@ -90,7 +90,7 @@ function CategoryManagement() {
     <div className="mt-12 mb-8 flex flex-col gap-4">
       <div className="relative bg-clip-border mx-4 rounded-xl overflow-hidden bg-gradient-to-tr from-gray-900 to-gray-800 text-white shadow-gray-900/20 shadow-lg -mt-6 mb-2 p-6">
         <h6 className="block antialiased tracking-normal font-sans text-base font-semibold leading-relaxed text-white">
-          Danh mục trong kho
+          Khu vực kho lưu trữ
         </h6>
       </div>
       <div className="flex gap-4 items-center justify-center">
@@ -120,7 +120,7 @@ function CategoryManagement() {
           
         </div>
        </div>
-       {!showForm && <FormAddCategory />}
+       {!showForm && <FormAddLocation />}
 
        {/* ----------table------------ */}
        
@@ -132,16 +132,13 @@ function CategoryManagement() {
                   #
                 </th>
                 <th scope="col" className="py-3 px-6">
-                  Mã danh mục
-                </th>
-                <th scope="col" className="py-3 px-6">
-                  Tên danh mục
-                </th>
-                <th scope="col" className="py-3 px-6">
                   Mã khu vực
                 </th>
                 <th scope="col" className="py-3 px-6">
-                  Thời gian tạo
+                  Tên khu vực
+                </th>
+                <th scope="col" className="py-3 px-6">
+                  Trạng thái
                 </th>
                 <th scope="col" className="py-3 px-6">
                   Chức năng
@@ -156,16 +153,13 @@ function CategoryManagement() {
                  {firstItemRank + index}
                 </td>
                 <td className="py-4 px-6">
-                  {item.category}
+                  {item.areaID}
                 </td>
                 <td className="py-4 px-6">
-                {item.nameID}
+                {item.areaName}
                 </td>
                 <td className="py-4 px-6">
-                {item.location}
-                </td>
-                <td className="py-4 px-6">
-                  {item.createdAt}
+                  {item.status}
                 </td>
                 <td className="py-4 px-6 flex">
                   <h2 onClick={() => handleEditNews(item.id)} className="font-medium cursor-pointer text-blue-600 dark:text-blue-500 hover:underline">Sửa</h2>
@@ -210,4 +204,4 @@ function CategoryManagement() {
   )
 }
 
-export default CategoryManagement
+export default LocationStore

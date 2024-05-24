@@ -11,6 +11,7 @@ import CmdImport from "../pages/ImportProduct/CmdImport"
 import Category from "../pages/Category/Category"
 import EditProduct from "../pages/Product/EditProduct"
 import Supplier from "../pages/Supplier/Supplier"
+import Locations from "../pages/Location/Locations"
 export const routes = [
    
     {
@@ -51,6 +52,11 @@ export const routes = [
     {
         path:'/categories',
         element:Category,
+        isShowHeader: true,
+    },
+    {
+        path:'/locations-store',
+        element:Locations,
         isShowHeader: true,
     },
     {

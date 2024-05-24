@@ -6,7 +6,6 @@ function Category() {
   return (
     <div>
     <HeaderComponent name="Danh mục sản phẩm"/>
-
     <CategoryManagement/>
 </div>
   )

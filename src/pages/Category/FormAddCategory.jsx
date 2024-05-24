@@ -1,10 +1,33 @@
-import React, { useState } from 'react'
-import { database, storage, ref, set, push, storageRef, uploadBytes, getDownloadURL, serverTimestamp } from '../../App';
+import React, { useEffect, useState } from 'react'
+import { database, ref, set, push, serverTimestamp } from '../../App';
+import { getDatabase, child, get } from 'firebase/database';
 
 function FormAddCategory() {
 
     const [nameID, setNameID] = useState('');
-    const [category, setCategory] = useState('');
+    const [category, setCategory] = useState("");
+    const [location, setLocation] = useState([]);
+    const [selectedLocation, setSelectedLocation] = useState('');
+
+    useEffect(() => {
+      const dbRef = ref(getDatabase());
+    
+      get(child(dbRef, `Locations`))
+          .then((snapshot) => {
+              if (snapshot.exists()) {
+                  const fetchedLocations = Object.entries(snapshot.val()).map(([id, value]) => ({
+                    ...value,
+                      id
+                  }));
+                  setLocation(fetchedLocations);
+              } else {
+                  console.log("No data available in Locations");
+              }
+          })
+          .catch((error) => {
+              console.error(error);
+          });
+    }, []);
 
   const handleNameIDChange = (event) => {
     const newNameID = event.target.value;
@@ -27,6 +50,7 @@ const handleCategoryChange = (event) => {
     set(newsRef, {
       nameID: nameID,
       category: category,
+      location: selectedLocation,
       createdAt: serverTimestamp()
     }).then(() => {
       alert('Data uploaded successfully!');
@@ -63,8 +87,20 @@ const handleCategoryChange = (event) => {
               onChange={handleCategoryChange}
               />
               </div>
+              <div className=' flex flex-col grow'>
+            <label htmlFor="">Mã khu vực</label>
+                 <select name="category" id="category-select" className='grow border focus:border-black rounded-lg p-2 '
+                 value={selectedLocation} onChange={e => setSelectedLocation(e.target.value)} >
+                  <option value="">Mã khu vực</option>
+                 {location.map((item, index) => (
+                  <option key={index} value={item.areaID}>
+                      {item.areaName}
+                  </option>
+              ))}
+          </select>
+          </div>
          </div>
-             
+       
         </div>
         <button type="submit" className='py-3 w-full  bg-[#6366f1] text-white font-rob mt-4 rounded-lg' >Thêm</button>
       </div>

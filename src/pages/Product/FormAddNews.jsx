@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { database, storage, ref, set, push, storageRef, uploadBytes, getDownloadURL, serverTimestamp } from '../../App';
+import {  storage, ref, set, push, storageRef, uploadBytes, getDownloadURL, serverTimestamp } from '../../App';
 import { getDatabase, child, get, remove } from 'firebase/database';
 function FormAddNews() {
 

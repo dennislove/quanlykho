@@ -7,11 +7,11 @@ function Dashboard() {
   return (
     <div className='relative  bg-white shadow-sm inset-0 z-50 my-4 ml-4  h-[calc(100vh-10px)] w-[25%] rounded-xl transition-transform duration-300 border border-blue-gray-100'>
         <div className='relative'>
-        <a className="py-6 px-8 text-center" href="#">
+        <div className="py-6 px-8 text-center" >
             <h6 className="block antialiased tracking-normal font-rob text-base font-bold leading-relaxed text-blue-gray-900">
             Quản Lý Kho
             </h6>
-        </a>
+        </div>
         <div className="m-4  overflow-auto h-[calc(100vh-120px)] relative snap-y hide-scrollbar">
           <ul className="mb-4 flex flex-col gap-1">
             <li>
@@ -218,6 +218,24 @@ function Dashboard() {
 
                   <p className="block antialiased font-rob text-base leading-relaxed text-inherit font-medium capitalize">
                   Danh mục sản phẩm
+                  </p>
+                </NavLink>
+             
+            </li>
+            <li>
+            <NavLink
+                to="/locations-store"
+                className={({ isActive }) =>
+                  isActive? 
+                "align-middle select-none font-rob font-bold text-center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 rounded-lg bg-gradient-to-tr from-gray-900 to-gray-800 text-white shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 active:opacity-[0.85] w-full flex items-center gap-4 px-4 capitalize"
+                :"align-middle select-none font-rob font-bold text-center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 rounded-lg text-[#607D8B] hover:bg-[#607D8B]/10 active:bg-[#607D8B]/30 w-full flex items-center gap-4 px-4 capitalize" }
+                    type="button"
+                  >
+               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349M3.75 21V9.349m0 0a3.001 3.001 0 0 0 3.75-.615A2.993 2.993 0 0 0 9.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 0 0 2.25 1.016c.896 0 1.7-.393 2.25-1.015a3.001 3.001 0 0 0 3.75.614m-16.5 0a3.004 3.004 0 0 1-.621-4.72l1.189-1.19A1.5 1.5 0 0 1 5.378 3h13.243a1.5 1.5 0 0 1 1.06.44l1.19 1.189a3 3 0 0 1-.621 4.72M6.75 18h3.75a.75.75 0 0 0 .75-.75V13.5a.75.75 0 0 0-.75-.75H6.75a.75.75 0 0 0-.75.75v3.75c0 .414.336.75.75.75Z" />
+</svg>
+                  <p className="block antialiased font-rob text-base leading-relaxed text-inherit font-medium capitalize">
+                  Khu vực lưu trữ
                   </p>
                 </NavLink>
              
