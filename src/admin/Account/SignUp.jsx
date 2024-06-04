@@ -62,8 +62,8 @@ const handleConfirmPasswordChange = (event) => {
         </div>
         <div className="w-full lg:w-3/5 flex flex-col items-center justify-center">
           <div className="text-center">
-            <h2 className="font-bold mb-4 text-4xl">Thêm Tài Khoản Admin</h2>
-            <h3 color="blue-gray" className="text-lg font-normal">Vui lòng điền thông tin admin mới.</h3>
+            <h2 className="font-bold mb-4 text-4xl">Thêm Tài Khoản</h2>
+            <h3 color="blue-gray" className="text-lg font-normal">Vui lòng điền thông tin mới.</h3>
           </div>
 
           <form className="mt-8 mb-2 mx-auto w-80 max-w-screen-lg lg:w-1/2" onSubmit={handleSignUp}>

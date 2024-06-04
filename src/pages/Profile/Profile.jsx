@@ -4,7 +4,7 @@ import HeaderComponent from '../../components/HeaderComponent/HeaderComponent'
 function Profile() {
   return (
     <div>
-      <HeaderComponent name="profile"/>
+      <HeaderComponent name="Cá nhân"/>
 
         Cập nhật thông tin cá nhân
     </div>

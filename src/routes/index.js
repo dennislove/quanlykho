@@ -12,6 +12,9 @@ import Category from "../pages/Category/Category"
 import EditProduct from "../pages/Product/EditProduct"
 import Supplier from "../pages/Supplier/Supplier"
 import Locations from "../pages/Location/Locations"
+import AddProduct from "../pages/AddProduct/AddProduct"
+import Error from "../components/DefautComponent/Error"
+import SessionViewer from "../pages/ImportProduct/SessionViewer"
 export const routes = [
    
     {
@@ -40,6 +43,11 @@ export const routes = [
         isShowHeader: true,
     },
     {
+        path:'/session',
+        element:SessionViewer,
+        isShowHeader: true,
+    },
+    {
         path:'/phieu-xuat-hang',
         element:FormExport,
         isShowHeader: true,
@@ -65,6 +73,11 @@ export const routes = [
         isShowHeader: true,
     },
     {
+        path:'/add-new-product',
+        element:AddProduct,
+        isShowHeader: true,
+    },
+    {
         path:'/product/edit/:id',
         element:EditProduct,
         isShowHeader: true,
@@ -74,7 +87,12 @@ export const routes = [
         element:SignUp,
         isShowHeader: false,
         protected: false
-
+    },
+    {
+        path:'/404',
+        element:Error,
+        isShowHeader: false,
+        protected: false
     },
     {
         path:'/sign-in',

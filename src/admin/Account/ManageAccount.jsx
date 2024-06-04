@@ -101,9 +101,9 @@ function ManageAccount() {
               value={role}
               className='grow border focus:border-black rounded-lg p-2'>
               <option value="">---Loại tài khoản---</option>
-              <option value="admin">Admin</option>
-              <option value="importStaff">Nhân viên nhập</option>
-              <option value="exportStaff">Nhân viên xuất</option>
+              <option value="Admin">Admin</option>
+              <option value="Nhân viên nhập">Nhân viên nhập</option>
+              <option value="Nhân viên xuất">Nhân viên xuất</option>
             </select>
                
           </div>

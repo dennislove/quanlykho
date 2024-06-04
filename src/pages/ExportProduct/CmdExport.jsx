@@ -1,11 +1,12 @@
 import React from 'react'
 import HeaderComponent from '../../components/HeaderComponent/HeaderComponent'
+import SessionViewer from './SessionViewer'
 
 function CmdExport() {
   return (
     <div>
     <HeaderComponent name="Lệnh xuất kho"/>
-    <h2>Lệnh xuất kho được để tại đây.</h2>
+    <SessionViewer/>
 </div>
   )
 }

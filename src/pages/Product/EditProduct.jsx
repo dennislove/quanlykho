@@ -10,7 +10,7 @@ function EditProduct() {
     name: "",
     categoryCode: "",
     unit: "",
-    description: "",
+    descriptions: "",
     image: "",
     quantity: "",
     price: "",
@@ -111,7 +111,7 @@ function EditProduct() {
               type="text"
               name="productCode"
               readOnly
-              // value={product.productCode}
+              value={product.productCode}
               // onChange={handleChange}
               disabled
               className="mt-1 p-2 border border-gray-300 rounded-md w-full bg-gray-200 focus:outline-none"
@@ -218,7 +218,7 @@ function EditProduct() {
             </label>
             <textarea
               name="description"
-              value={product.description}
+              value={product.descriptions}
               onChange={handleChange}
               rows="4"
               className="mt-1 p-2 border border-gray-300 rounded-md w-full"
