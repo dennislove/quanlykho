@@ -122,7 +122,7 @@ export const routes = [
   {
     path: "/dashboard",
     element: Dashboard,
-    isShowHeader: false,
+    isShowHeader: true,
     protected: false,
   },
 ];
