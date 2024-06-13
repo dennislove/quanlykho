@@ -1,20 +1,17 @@
-import React, { useEffect, useState } from 'react'
-
-import { getDatabase, ref, child, get, remove  } from "firebase/database";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useState } from 'react';
+import { getDatabase, ref, child, get, remove, update } from "firebase/database";
 import FormAddCategory from './FormAddCategory';
 import ReactPaginate from 'react-paginate';
+import EditCategoryModal from './EditCategoryModal'; // Import modal
 
 function CategoryManagement() {
-  const [showForm, setShowForm] = useState(false); // useState hook để lưu trữ trạng thái hiển thị (mặc định là false)
-
-  const handleClick = () => {
-    setShowForm(!showForm); // Thay đổi trạng thái hiển thị khi click
-  };
-
-  // select database
+  const [showForm, setShowForm] = useState(false);
   const [news, setNews] = useState([]);
   const [filteredNews, setFilteredNews] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedCategory, setSelectedCategory] = useState();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const itemsPerPage = 5;
 
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -43,7 +40,7 @@ function CategoryManagement() {
       .catch((error) => {
         console.error(error);
       });
-  }, []);
+  }, [currentItems]);
 
   const [query, setQuery] = useState('');
   const handleSearchChange = (event) => {
@@ -60,31 +57,51 @@ function CategoryManagement() {
     }
   }, [query, news]);
 
-  // Pagination handler
   const handlePageClick = (event) => {
     setCurrentPage(event.selected + 1);
   };
+
   const handleEditNews = (newsId) => {
     const item = news.find(item => item.id === newsId);
     if (item) {
-      // Set the current item to the one to be edited
-      setShowForm(true); // Show the form
+      setSelectedCategory(item);
+      setIsModalOpen(true);
     }
   };
+
   const handleDeleteNews = (newsId) => {
     const db = getDatabase();
     const newsRef = ref(db, `Category/${newsId}`);
-  
+
     remove(newsRef)
       .then(() => {
         console.log(`News item with ID: ${newsId} has been deleted.`);
-        // Cập nhật state nếu cần
         setNews((currentNews) => currentNews.filter((item) => item.id !== newsId));
       })
       .catch((error) => {
         console.error("Error deleting news item:", error);
       });
   };
+
+  const handleSaveUpdate = (updatedCategory) => {
+    const db = getDatabase();
+    const updates = {};
+    updates[`/Category/${updatedCategory.id}`] = updatedCategory;
+
+    update(ref(db), updates)
+      .then(() => {
+        setNews((currentNews) =>
+          currentNews.map((item) =>
+            item.id === updatedCategory.id ? updatedCategory : item
+          )
+        );
+        setIsModalOpen(false);
+      })
+      .catch((error) => {
+        console.error("Error updating category:", error);
+      });
+  };
+
 
   return (
     <div className="mt-12 mb-8 flex flex-col gap-4">
@@ -94,75 +111,67 @@ function CategoryManagement() {
         </h6>
       </div>
       <div className="flex gap-4 items-center justify-center">
-        <button className="rounded-full bg-indigo-500 text-white flex p-2" onClick={handleClick}>
+        <button className="rounded-full bg-indigo-500 text-white flex p-2" onClick={() => setShowForm(!showForm)}>
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-        </svg>
-
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
         </button>
-        
-        <div className="">
-          <div className='border flex shadow-sm focus:ring-indigo-500 focus:border-indigo-500 w-full sm:text-sm border-gray-300 rounded'>
-              <input
-                type="text"
-                name="search-news"
-                id="search-news"
-                className="outline-none w-full p-2"
-                placeholder="Tìm kiếm..."
-               value={query} onChange={handleSearchChange}
-              />
-              <button className='bg-indigo-600 px-4 rounded hover:bg-indigo-700  text-white'>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-              </svg>
-            </button>
-          </div>
-          
+        <div className="border flex shadow-sm focus:ring-indigo-500 focus:border-indigo-500 w-full sm:text-sm border-gray-300 rounded">
+          <input
+            type="text"
+            name="search-news"
+            id="search-news"
+            className="outline-none w-full p-2"
+            placeholder="Tìm kiếm..."
+            value={query}
+            onChange={handleSearchChange}
+          />
+          <button className='bg-indigo-600 px-4 rounded hover:bg-indigo-700 text-white'>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+              <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+            </svg>
+          </button>
         </div>
-       </div>
-       {!showForm && <FormAddCategory />}
-
-       {/* ----------table------------ */}
-       
-       <div className="overflow-x-auto relative shadow-md sm:rounded-lg">
-          <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-              <tr>
-                <th scope="col" className="py-3 px-6">
-                  #
-                </th>
-                <th scope="col" className="py-3 px-6">
-                  Mã danh mục
-                </th>
-                <th scope="col" className="py-3 px-6">
-                  Tên danh mục
-                </th>
-                <th scope="col" className="py-3 px-6">
-                  Mã khu vực
-                </th>
-                <th scope="col" className="py-3 px-6">
-                  Thời gian tạo
-                </th>
-                <th scope="col" className="py-3 px-6">
-                  Chức năng
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {/* Example row */}
-              {currentItems.map((item, index) => (
+      </div>
+      {!showForm && <FormAddCategory />}
+      <div className="overflow-x-auto relative shadow-md sm:rounded-lg">
+        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+              <th scope="col" className="py-3 px-6">
+                #
+              </th>
+              <th scope="col" className="py-3 px-6">
+                Mã danh mục
+              </th>
+              <th scope="col" className="py-3 px-6">
+                Tên danh mục
+              </th>
+              <th scope="col" className="py-3 px-6">
+                Mã khu vực
+              </th>
+              <th scope="col" className="py-3 px-6">
+                Thời gian tạo
+              </th>
+              <th scope="col" className="py-3 px-6">
+                Chức năng
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {currentItems.map((item, index) => (
               <tr key={firstItemRank + index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                 <td className="py-4 px-6">
-                 {firstItemRank + index}
+                  {firstItemRank + index}
                 </td>
                 <td className="py-4 px-6">
                   {item.category}
                 </td>
                 <td className="py-4 px-6">
-                {item.nameID}
+                  {item.nameID}
                 </td>
                 <td className="py-4 px-6">
-                {item.location}
+                  {item.location}
                 </td>
                 <td className="py-4 px-6">
                   {item.createdAt}
@@ -172,42 +181,46 @@ function CategoryManagement() {
                   <h2 onClick={() => handleDeleteNews(item.id)} className="font-medium cursor-pointer text-red-600 dark:text-red-500 hover:underline ml-4">Xóa</h2>
                 </td>
               </tr>
-                 ))}
-              {/* Dynamic rows should be generated here based on data */}
-            </tbody>
-          </table>
-        </div>
-
-        <div className="flex justify-between items-center mt-4">
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div className="flex justify-between items-center mt-4">
         <ReactPaginate
-        previousLabel={<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
-                    </svg> }
-        nextLabel={<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
-                </svg>}
-        breakLabel="..."
-        pageCount={totalPages}
-        marginPagesDisplayed={3}
-        pageRangeDisplayed={5}
-        onPageChange={handlePageClick}
-        containerClassName="flex gap-2"
-        pageClassName="px-4 py-2 text-[16px] rounded-full hover:bg-gray-200"
+          previousLabel={<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+          </svg>}
+          nextLabel={<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+            <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+          </svg>}
+          breakLabel="..."
+          pageCount={totalPages}
+          marginPagesDisplayed={3}
+          pageRangeDisplayed={5}
+          onPageChange={handlePageClick}
+          containerClassName="flex gap-2"
+          pageClassName="px-4 py-2 text-[16px] rounded-full hover:bg-gray-200"
+          previousClassName="p-2 text-sm text-gray-600 rounded-full hover:bg-gray-300"
+          nextClassName="p-2 text-sm text-gray-600 rounded-full hover:bg-gray-300"
+          disabledClassName="opacity-50 cursor-not-allowed"
+          activeClassName="bg-blue-600 text-white hover:bg-blue-700"
+          initialPage={currentPage - 1}
+        />
+        <span className="text-sm">
+          Page {currentPage} of {totalPages}
+        </span>
+      </div>
 
-        previousClassName="p-2 text-sm text-gray-600 rounded-full hover:bg-gray-300"
-        nextClassName="p-2 text-sm text-gray-600 rounded-full hover:bg-gray-300"
-        disabledClassName="opacity-50 cursor-not-allowed"
-        activeClassName="bg-blue-600 text-white hover:bg-blue-700 "
-        initialPage={currentPage - 1}
+      {selectedCategory && 
+        <EditCategoryModal
+        isOpen={isModalOpen}
+        onRequestClose={() => setIsModalOpen(false)}
+        category={selectedCategory}
+        onSave={handleSaveUpdate}
       />
-  <span className="text-sm">
-    Page {currentPage} of {totalPages}
-  </span>
-</div>
-
-</div>
-
-  )
+      }
+    </div>
+  );
 }
 
-export default CategoryManagement
+export default CategoryManagement;
