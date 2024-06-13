@@ -110,14 +110,13 @@ const handleConfirmPasswordChange = (event) => {
             </select>
             </div>
           
-            <button type="submit" className="mt-6 bg-black text-white  text-center px-[10rem] py-3 rounded-lg"   >
-              Đăng Ký Ngay
+            <button type="submit" className="mt-6 bg-black text-white  text-center px-[11rem] py-3 rounded-lg"   >
+              Thêm Ngay
             </button>
             {error && <p className="text-red-500">{error}</p>}
       
             <div variant="paragraph" className="text-center text-blue-gray-500 font-medium mt-4">
-              Bạn đã có tài khoản?
-              <Link to="/" className="text-gray-900 ml-1 underline">Đăng nhập</Link>
+             
             </div> 
           </form>
   

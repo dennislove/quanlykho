@@ -79,10 +79,11 @@ const SessionViewer = () => {
              { index +1}
             </td>
             <td className="py-4 px-6">
-              {product.title}
+            {product.nameID}
             </td>
             <td className="py-4 px-6">
-            {product.nameID}
+            
+            {product.title}
             </td>
             <td className="py-4 px-6">
               {product.selectedCategory}

@@ -1,6 +1,42 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react';
+import { auth } from '../../App';
+import { onAuthStateChanged } from 'firebase/auth';
+import { getDatabase, ref, onValue } from "firebase/database";
   
 function HeaderComponent({name}) {
+  const [userRole, setUserRole] = useState(null);
+
+  useEffect(() => {
+      // Monitor auth state and user role
+      const unsubscribe = onAuthStateChanged(auth, user => {
+          if (user) {
+              const userRef = ref(getDatabase(), `Users/${user.uid}`);
+              onValue(userRef, snapshot => {
+                  const userData = snapshot.val();
+                  if (userData && userData.auth) {
+                      setUserRole(userData.auth); // Update state with user's role
+                  }
+              }, { onlyOnce: true }); // Listener executes only once per authentication state change
+          } else {
+              setUserRole(null); // Reset role if no user
+          }
+      });
+
+      return () => unsubscribe(); // Clean up the listener
+  }, []);
+  function renderDashboard() {
+      switch (userRole) {
+          case 'Admin':
+              return "Admin";
+          case 'Nhân viên nhập':
+              return 'Nhân viên nhập';
+          case 'Nhân viên xuất':
+              return 'Nhân viên xuất';
+          default:
+              return null; // or any default view
+      }
+  }
+
 
   return (
     <nav className="block w-full max-w-full bg-transparent text-black shadow-none rounded-xl transition-all px-0 py-1">
@@ -11,7 +47,7 @@ function HeaderComponent({name}) {
             <li className="flex items-center text-blue-gray-900 antialiased font-rob text-sm font-normal leading-normal cursor-pointer transition-colors duration-300 hover:text-light-blue-500">
               <a href="#" className=''>
                 <p className="block antialiased font-rob text-sm leading-normal text-blue-gray-900 font-normal opacity-50 transition-all hover:text-blue-500 hover:opacity-100">
-                  Admin
+                  {renderDashboard()}
                 </p>
               </a>
               <span className="text-[#607D8B] text-sm antialiased font-rob font-normal leading-normal mx-2 pointer-events-none select-none">
@@ -59,7 +95,7 @@ function HeaderComponent({name}) {
               clipRule="evenodd"
               />
           </svg>
-          Admin
+          {renderDashboard()}
       </button>
         <button
           aria-expanded="false"

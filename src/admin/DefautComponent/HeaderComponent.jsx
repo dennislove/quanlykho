@@ -58,7 +58,7 @@ function HeaderComponent({name}) {
             clipRule="evenodd"
             />
         </svg>
-        Admin
+        
     </button>
       <button
         aria-expanded="false"

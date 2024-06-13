@@ -435,10 +435,11 @@ const handleDeleteItem = (index) => {
              { index +1}
             </td>
             <td className="py-4 px-6">
-              {item.title}
+            {item.nameID}
             </td>
             <td className="py-4 px-6">
-            {item.nameID}
+           
+            {item.title}
             </td>
             <td className="py-4 px-6">
               {item.selectedCategory}

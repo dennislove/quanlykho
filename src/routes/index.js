@@ -15,10 +15,11 @@ import Locations from "../pages/Location/Locations"
 import AddProduct from "../pages/AddProduct/AddProduct"
 import Error from "../components/DefautComponent/Error"
 import SessionViewer from "../pages/ImportProduct/SessionViewer"
+import SignIn from "../admin/Account/SignIn"
 export const routes = [
    
     {
-        path:'/admin',
+        path:'/',
         element:HomePage,
         isShowHeader: true,
     },
@@ -89,18 +90,18 @@ export const routes = [
         protected: false
     },
     {
+      path:'/sign-in',
+      element:SignIn,
+      isShowHeader: false,
+      protected: false
+  },
+    {
         path:'/404',
         element:Error,
         isShowHeader: false,
         protected: false
     },
-    {
-        path:'/sign-in',
-        element:SignInClient,
-        isShowHeader: false,
-        protected: false
-
-    },
+   
     {
         path:'/account-management',
         element:ManagementAccount,
