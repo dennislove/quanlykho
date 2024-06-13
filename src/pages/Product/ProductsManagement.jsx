@@ -150,10 +150,10 @@ function ProductsManagement() {
                  {firstItemRank + index}
                 </td>
                 <td className="py-4 px-6">
-                  {item.name}
+                  {item.productCode}
                 </td>
                 <td className="py-4 px-6">
-                {item.productCode}
+                  {item.name}
                 </td>
                 <td className="py-4 px-6">
                   {item.categoryCode}
