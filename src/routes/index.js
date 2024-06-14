@@ -16,6 +16,7 @@ import AddProduct from "../pages/AddProduct/AddProduct"
 import Error from "../components/DefautComponent/Error"
 import SessionViewer from "../pages/ImportProduct/SessionViewer"
 import SignIn from "../admin/Account/SignIn"
+import Statistical from "../pages/HomePage/Statistical"
 export const routes = [
    
     {
@@ -26,6 +27,11 @@ export const routes = [
     {
         path:'/product',
         element:Product,
+        isShowHeader: true,
+    },
+    {
+        path:'/report-export',
+        element:Statistical,
         isShowHeader: true,
     },
     {

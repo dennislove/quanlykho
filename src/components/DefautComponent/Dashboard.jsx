@@ -238,7 +238,7 @@ function Dashboard() {
             
             <li>
             <NavLink
-               to="/404"
+               to="/report-export"
                 className={({ isActive }) =>
                   isActive? 
                 "align-middle select-none font-rob font-bold text-center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 rounded-lg bg-gradient-to-tr from-gray-900 to-gray-800 text-white shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 active:opacity-[0.85] w-full flex items-center gap-4 px-4 capitalize"

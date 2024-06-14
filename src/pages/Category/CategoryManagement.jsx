@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 
-import { getDatabase, ref, child, get, remove  } from "firebase/database";
+import { getDatabase, ref, child, get, remove, update  } from "firebase/database";
 import FormAddCategory from './FormAddCategory';
+import EditCategoryModal from './EditCategoryModal'; 
 import ReactPaginate from 'react-paginate';
 
 function CategoryManagement() {
@@ -15,6 +16,8 @@ function CategoryManagement() {
   const [news, setNews] = useState([]);
   const [filteredNews, setFilteredNews] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedCategory, setSelectedCategory] = useState();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const itemsPerPage = 5;
 
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -67,8 +70,8 @@ function CategoryManagement() {
   const handleEditNews = (newsId) => {
     const item = news.find(item => item.id === newsId);
     if (item) {
-      // Set the current item to the one to be edited
-      setShowForm(true); // Show the form
+      setSelectedCategory(item);
+      setIsModalOpen(true);
     }
   };
   const handleDeleteNews = (newsId) => {
@@ -83,6 +86,24 @@ function CategoryManagement() {
       })
       .catch((error) => {
         console.error("Error deleting news item:", error);
+      });
+  };
+  const handleSaveUpdate = (updatedCategory) => {
+    const db = getDatabase();
+    const updates = {};
+    updates[`/Category/${updatedCategory.id}`] = updatedCategory;
+
+    update(ref(db), updates)
+      .then(() => {
+        setNews((currentNews) =>
+          currentNews.map((item) =>
+            item.id === updatedCategory.id ? updatedCategory : item
+          )
+        );
+        setIsModalOpen(false);
+      })
+      .catch((error) => {
+        console.error("Error updating category:", error);
       });
   };
 
@@ -204,7 +225,14 @@ function CategoryManagement() {
     Page {currentPage} of {totalPages}
   </span>
 </div>
-
+{selectedCategory && 
+        <EditCategoryModal
+        isOpen={isModalOpen}
+        onRequestClose={() => setIsModalOpen(false)}
+        category={selectedCategory}
+        onSave={handleSaveUpdate}
+      />
+      }
 </div>
 
   )

@@ -5,8 +5,8 @@ import HeaderComponent from "../../components/HeaderComponent/HeaderComponent"
 function HomePage() {
   return (
     <div className=' relative'>
-        <HeaderComponent name="Homepage"/>
-      Trang chủ quản lý
+        <HeaderComponent name=""/>
+      CHÀO MỪNG ĐẾN VỚI HỆ THỐNG
     </div>
   )
 }
