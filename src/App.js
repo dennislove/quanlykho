@@ -7,6 +7,7 @@ import 'firebase/storage';
 import {
   getDatabase,
   ref,
+  onValue,
   get,
   orderByChild,
   equalTo,
@@ -84,6 +85,7 @@ export {
   database,
   storage,
   ref,
+  onValue,
   set,
   get,
   push,
